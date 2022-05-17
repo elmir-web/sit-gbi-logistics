@@ -15,7 +15,43 @@
             Укажите адрес загрузки и доставки — стоимость рассчитается
             автоматически
           </p>
-          <input type="text" class="down-address-couting" />
+
+          <div class="inputs-address-couting">
+            <div class="text-field text-field_floating-2">
+              <input
+                class="text-field__input"
+                id="down-address"
+                name="down-address"
+                placeholder="Адрес загрузки"
+              />
+              <label class="text-field__label" for="down-address"
+                >Адрес загрузки</label
+              >
+            </div>
+
+            <div class="text-field text-field_floating-2 input-delivery">
+              <input
+                class="text-field__input"
+                id="delivery-address"
+                name="delivery-address"
+                placeholder="Адрес доставки"
+              />
+              <label class="text-field__label" for="delivery-address"
+                >Адрес доставки</label
+              >
+            </div>
+          </div>
+
+          <div class="delivery-results">
+            <div class="delivery-results__toprow">
+              <div class="delivery-results__toprowleft">
+                <span class="delivery-results__distance-title">Расстояние</span>
+                <span class="delivery-results__distance-value">159 км</span>
+              </div>
+              <!--  -->
+            </div>
+            <!--  -->
+          </div>
         </div>
         <div class="couting-map"></div>
       </div>
