@@ -25,6 +25,24 @@ body {
       -ms-flex-align: center;
           align-items: center;
   background-color: #d83f29;
+  position: relative;
+}
+
+.logistics-block__title {
+  position: absolute;
+  left: 41px;
+  top: 515px;
+  -webkit-writing-mode: vertical-rl;
+      -ms-writing-mode: tb-rl;
+          writing-mode: vertical-rl;
+  -webkit-transform: scale(-1);
+          transform: scale(-1);
+  font-style: normal;
+  font-weight: 300;
+  font-size: 80px;
+  line-height: 100%;
+  letter-spacing: -4.8px;
+  color: #ffffff;
 }
 
 .logistics-block .couting-map-wrapper {
@@ -199,6 +217,25 @@ body {
   margin-left: auto;
   margin-right: auto;
   margin-top: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.logistics-block .couting-map-wrapper .couting-price .delivery-results__toprow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .logistics-block .couting-map-wrapper .couting-price .delivery-results__distance-title {
@@ -220,6 +257,37 @@ body {
   line-height: 120%;
   letter-spacing: -0.8px;
   color: #ffffff;
+}
+
+.logistics-block .couting-map-wrapper .couting-price .delivery-results__price-title {
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: -0.8px;
+  color: #acacac;
+}
+
+.logistics-block .couting-map-wrapper .couting-price .delivery-results__price-value {
+  margin-top: 8px;
+  display: block;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120%;
+  letter-spacing: -0.8px;
+  color: #ffffff;
+}
+
+.logistics-block .couting-map-wrapper .couting-price .delivery-results__bottomrow {
+  width: 100%;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: -0.8px;
+  color: #acacac;
 }
 
 .logistics-block .couting-map-wrapper .couting-map {

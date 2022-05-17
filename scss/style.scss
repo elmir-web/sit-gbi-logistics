@@ -22,6 +22,25 @@ body {
 
   background-color: #d83f29;
 
+  position: relative;
+
+  &__title {
+    position: absolute;
+    left: 41px;
+    top: 515px;
+    writing-mode: vertical-rl;
+    transform: scale(-1);
+
+    font-style: normal;
+    font-weight: 300;
+    font-size: 80px;
+    line-height: 100%;
+
+    letter-spacing: -4.8px;
+
+    color: #ffffff;
+  }
+
   .couting-map-wrapper {
     width: 71.77083333333333%;
     height: 840px;
@@ -166,7 +185,16 @@ body {
         margin-right: auto;
         margin-top: 24px;
 
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
         &__toprow {
+          display: flex;
+          justify-content: space-between;
+        }
+
+        &__bottomrow {
         }
 
         &__distance-title {
@@ -194,6 +222,43 @@ body {
           letter-spacing: -0.8px;
 
           color: #ffffff;
+        }
+
+        &__price-title {
+          display: block;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 120%;
+
+          letter-spacing: -0.8px;
+
+          color: #acacac;
+        }
+
+        &__price-value {
+          margin-top: 8px;
+          display: block;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 24px;
+          line-height: 120%;
+
+          letter-spacing: -0.8px;
+
+          color: #ffffff;
+        }
+
+        &__bottomrow {
+          width: 100%;
+          font-style: normal;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 120%;
+
+          letter-spacing: -0.8px;
+
+          color: #acacac;
         }
       }
     }
