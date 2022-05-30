@@ -24,6 +24,12 @@ body {
 
   position: relative;
 
+  @media (max-width: 768px) {
+    height: auto;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
   &__title {
     position: absolute;
     left: 41px;
@@ -39,6 +45,11 @@ body {
     letter-spacing: -4.8px;
 
     color: #ffffff;
+
+    @media (max-width: 850px) {
+      position: static;
+      display: none;
+    }
   }
 
   .couting-map-wrapper {
@@ -51,12 +62,53 @@ body {
       width: 1378px;
     }
 
+    @media (max-width: 850px) {
+      width: 95%;
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      height: 832px;
+      flex-direction: column;
+    }
+
     .couting-price {
       background-color: #161515;
       width: 31.93033381712627%;
-      height: 800px;
+      min-height: 800px;
       align-self: flex-end;
       z-index: 1;
+
+      @media (max-width: 1400px) {
+        width: 320px;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        min-height: 512px;
+      }
+
+      h2 {
+        display: none;
+        width: 80%;
+        margin-top: 24px;
+        margin-left: auto;
+        margin-right: auto;
+
+        font-style: normal;
+        font-weight: 300;
+        font-size: 36px;
+        line-height: 100%;
+
+        letter-spacing: -1.8px;
+
+        color: #ffffff;
+
+        @media (max-width: 850px) {
+          display: block;
+          width: 90%;
+        }
+      }
 
       p {
         margin-top: 43px;
@@ -72,6 +124,20 @@ body {
         letter-spacing: -0.8px;
 
         color: #ffffff;
+
+        @media (max-width: 768px) {
+          margin-top: 24px;
+          width: 90%;
+
+          font-style: normal;
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 120%;
+
+          letter-spacing: -0.8px;
+
+          color: #ffffff;
+        }
       }
 
       .inputs-address-couting {
@@ -81,6 +147,11 @@ body {
         height: 163px;
         width: 80%;
         border-bottom: 1px solid #ffffff;
+
+        @media (max-width: 768px) {
+          width: 90%;
+          margin-top: 43px;
+        }
 
         .input-delivery {
           margin-top: 35px;
@@ -189,9 +260,32 @@ body {
         flex-direction: column;
         justify-content: space-between;
 
+        @media (max-width: 768px) {
+          width: 90%;
+          height: 107px;
+        }
+
         &__toprow {
           display: flex;
           justify-content: space-between;
+
+          @media (max-width: 1400px) {
+            flex-direction: column;
+          }
+
+          @media (max-width: 768px) {
+            flex-direction: row;
+          }
+        }
+
+        &__toprowright {
+          @media (max-width: 1400px) {
+            margin-top: 20px;
+          }
+
+          @media (max-width: 768px) {
+            margin-top: 0;
+          }
         }
 
         &__bottomrow {
@@ -222,6 +316,17 @@ body {
           letter-spacing: -0.8px;
 
           color: #ffffff;
+
+          @media (max-width: 768px) {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 120%;
+
+            letter-spacing: -0.8px;
+
+            color: #ffffff;
+          }
         }
 
         &__price-title {
@@ -247,6 +352,18 @@ body {
           letter-spacing: -0.8px;
 
           color: #ffffff;
+
+          @media (max-width: 768px) {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 120%;
+
+            text-align: right;
+            letter-spacing: -0.8px;
+
+            color: #ffffff;
+          }
         }
 
         &__bottomrow {
@@ -259,17 +376,34 @@ body {
           letter-spacing: -0.8px;
 
           color: #acacac;
+
+          @media (max-width: 768px) {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 120%;
+
+            letter-spacing: -0.8px;
+
+            color: #acacac;
+          }
         }
       }
     }
 
     .couting-map {
       width: 74.16545718432511%;
-      height: 800px;
+      min-height: 800px;
       background-color: #fff;
       z-index: 0;
       position: absolute;
       right: 0;
+
+      @media (max-width: 768px) {
+        width: 100%;
+        min-height: 320px;
+        bottom: 0;
+      }
     }
   }
 }
