@@ -3,6 +3,7 @@
 
 let MY_MAP = null;
 const MAP_POINTERS = {
+  error: null,
   inputSelected: null,
   pointOne: {
     coords: null,
@@ -125,7 +126,12 @@ const preGeocodeEvent = (value) => {
 
       // Если геокодер возвращает пустой массив или неточный результат, то показываем ошибку.
       if (error) {
-        document.querySelector("#down-address").value = error;
+        MAP_POINTERS.error = true;
+
+        if (MAP_POINTERS.inputSelected === 1)
+          document.querySelector("#down-address").value = error;
+        else if (MAP_POINTERS.inputSelected === 2)
+          document.querySelector("#delivery-address").value = error;
       } else {
         showResult(obj);
       }
@@ -153,7 +159,7 @@ ymaps.ready(() => {
   });
 
   suggestViewDeliveryAddress.events.add("select", (event) => {
-    MAP_POINTERS.pointOne = 2;
+    MAP_POINTERS.inputSelected = 2;
 
     preGeocodeEvent(event.originalEvent.item.displayName);
   });
