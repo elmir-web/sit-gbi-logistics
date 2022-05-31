@@ -1,85 +1,96 @@
-import Toast from "./Toast.js";
-
 const DELIVERY_TARIFF = 75; // Стоимость за километр.
 const MINIMUM_COST = 500; // Минимальная стоимость.
+let MY_MAP = null;
+let INPUT_SELECTED = null;
+const MAP_POINTERS = {
+  pointOne: {
+    coords: null,
+    fullAddress: null,
+    shortAddress: null,
+  },
+  pointTwo: {
+    coords: null,
+    fullAddress: null,
+    shortAddress: null,
+  },
+};
 
 (() => {})();
 
-const showOnMap = (caption) => {
-  // Если карта еще не была создана, то создадим ее и добавим метку с адресом.
-  // if (!map) {
-  //   map = new ymaps.Map("map", state);
-  //   placemark = new ymaps.Placemark(
-  //     map.getCenter(),
-  //     {
-  //       iconCaption: caption,
-  //       balloonContent: caption,
-  //     },
-  //     {
-  //       preset: "islands#redDotIconWithCaption",
-  //     }
-  //   );
-  //   map.geoObjects.add(placemark);
-  //   // Если карта есть, то выставляем новый центр карты и меняем данные и позицию метки в соответствии с найденным адресом.
-  // } else {
-  //   map.setCenter(state.center, state.zoom);
-  //   placemark.geometry.setCoordinates(state.center);
-  //   placemark.properties.set({
-  //     iconCaption: caption,
-  //     balloonContent: caption,
-  //   });
-  // }
-};
+// const showOnMap = (state, caption) => {
+//   // Если карта еще не была создана, то создадим ее и добавим метку с адресом.
+//   if (!MY_MAP) {
+//     MY_MAP = new ymaps.Map("map", state);
+//     placemark = new ymaps.Placemark(
+//       MY_MAP.getCenter(),
+//       {
+//         iconCaption: caption,
+//         balloonContent: caption,
+//       },
+//       {
+//         preset: "islands#redDotIconWithCaption",
+//       }
+//     );
+//     MY_MAP.geoObjects.add(placemark);
+//     // Если карта есть, то выставляем новый центр карты и меняем данные и позицию метки в соответствии с найденным адресом.
+//   } else {
+//     MY_MAP.setCenter(state.center, state.zoom);
+//     placemark.geometry.setCoordinates(state.center);
+//     placemark.properties.set({
+//       iconCaption: caption,
+//       balloonContent: caption,
+//     });
+//   }
+// };
 
 function showResult(obj) {
-  // Удаляем сообщение об ошибке, если найденный адрес совпадает с поисковым запросом.
-  // $("#suggest").removeClass("input_error");
-  // $("#notice").css("display", "none");
-
-  // myMap.destroy(); // тут подумать
-
+  // // console.log(INPUT_SELECTED);
   let mapContainer = document.querySelector("#map");
   let bounds = obj.properties.get("boundedBy");
 
-  // // Рассчитываем видимую область для текущего положения пользователя.
-  // let mapState = ymaps.util.bounds.getCenterAndZoom(bounds, [
-  //   mapContainer.width(),
-  //   mapContainer.height(),
-  // ]);
+  // Рассчитываем видимую область для текущего положения пользователя.
+  let mapState = ymaps.util.bounds.getCenterAndZoom(bounds, [
+    mapContainer.offsetWidth,
+    mapContainer.offsetHeight,
+  ]);
 
-  // продолжить тут
+  // // console.log(mapState.center); // координаты точки
 
-  console.log(
-    ymaps.util.bounds.getCenterAndZoom(bounds, [
-      mapContainer.offsetWidth,
-      mapContainer.offsetHeight,
-    ])
-  ); // координаты точки
+  // // Убираем контролы с карты.
+  // // mapState.controls = [];
 
-  // Сохраняем полный адрес для сообщения под картой.
-  let address = [obj.getCountry(), obj.getAddressLine()].join(", ");
+  // // console.log(mapState); // координаты точки
 
-  // Сохраняем укороченный адрес для подписи метки.
-  let shortAddress = [
-    obj.getThoroughfare(),
-    obj.getPremiseNumber(),
-    obj.getPremise(),
-  ].join(" ");
+  // // Создаём карту.
+  // // showOnMap(mapState, shortAddress);
 
-  // Убираем контролы с карты.
-  // mapState.controls = [];
+  if (INPUT_SELECTED === 1) {
+    MAP_POINTERS.pointOne.coords = mapState.center;
+    MAP_POINTERS.pointOne.fullAddress = [
+      obj.getCountry(),
+      obj.getAddressLine(),
+    ].join(", ");
+    MAP_POINTERS.pointOne.shortAddress = [
+      obj.getThoroughfare(),
+      obj.getPremiseNumber(),
+      obj.getPremise(),
+    ].join(" ");
+  }
 
-  // Создаём карту.
-  showOnMap(shortAddress);
+  if (INPUT_SELECTED === 2) {
+    MAP_POINTERS.pointTwo.coords = mapState.center;
+    MAP_POINTERS.pointTwo.fullAddress = [
+      obj.getCountry(),
+      obj.getAddressLine(),
+    ].join(", ");
+    MAP_POINTERS.pointTwo.shortAddress = [
+      obj.getThoroughfare(),
+      obj.getPremiseNumber(),
+      obj.getPremise(),
+    ].join(" ");
+  }
 
-  // Выводим сообщение под картой.
-  new Toast({
-    title: "Сообщение",
-    text: address,
-    theme: "light",
-    autohide: true,
-    interval: 3000,
-  });
+  console.log(MAP_POINTERS);
 }
 
 const preGeocodeEvent = (value) => {
@@ -118,20 +129,8 @@ const preGeocodeEvent = (value) => {
 
       // Если геокодер возвращает пустой массив или неточный результат, то показываем ошибку.
       if (error) {
-        new Toast({
-          title: "Ошибка",
-          text: error,
-          theme: "danger",
-          autohide: true,
-          interval: 5000,
-        });
-        new Toast({
-          title: "Сообщение",
-          text: hint,
-          theme: "light",
-          autohide: true,
-          interval: 3000,
-        });
+        console.log(error);
+        console.log(hint);
       } else {
         showResult(obj);
       }
@@ -143,7 +142,7 @@ const preGeocodeEvent = (value) => {
 };
 
 ymaps.ready(() => {
-  let myMap = new ymaps.Map("map", {
+  MY_MAP = new ymaps.Map("map", {
     center: [45.060491, 38.97304],
     zoom: 9,
     controls: [],
@@ -151,36 +150,16 @@ ymaps.ready(() => {
 
   let suggestViewDownAddress = new ymaps.SuggestView("down-address");
   let suggestViewDeliveryAddress = new ymaps.SuggestView("delivery-address");
-  // let map;
-  // let placemark;
 
   suggestViewDownAddress.events.add("select", (event) => {
+    INPUT_SELECTED = 1;
+
     preGeocodeEvent(event.originalEvent.item.displayName);
   });
 
   suggestViewDeliveryAddress.events.add("select", (event) => {
+    INPUT_SELECTED = 2;
+
     preGeocodeEvent(event.originalEvent.item.displayName);
   });
-
-  // myMap.behaviors.disable(["scrollZoom"]);
-
-  // let routePanelControl = new ymaps.control.RoutePanel({
-  //   // Создадим панель маршрутизации.
-  //   options: {
-  //     // Добавим заголовок панели.
-  //     showHeader: true,
-  //     autofocus: false,
-  //     title:
-  //       "Укажите адрес загрузки и выгрузки — стоимость рассчитается автоматически",
-  //   },
-  // });
-
-  // routePanelControl.routePanel.options.set({
-  //   // Пользователь сможет построить только автомобильный маршрут.
-  //   types: {
-  //     auto: true,
-  //   },
-  // });
-
-  // myMap.controls.add(routePanelControl);
 });
