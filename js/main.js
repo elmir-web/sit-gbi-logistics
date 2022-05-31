@@ -155,12 +155,18 @@ ymaps.ready(() => {
   suggestViewDownAddress.events.add("select", (event) => {
     MAP_POINTERS.inputSelected = 1;
 
-    preGeocodeEvent(event.originalEvent.item.displayName);
+    // console.log(55, event.get("item").value);
+
+    preGeocodeEvent(event.get("item").value);
+    // preGeocodeEvent(event.originalEvent.item.displayName);
   });
 
   suggestViewDeliveryAddress.events.add("select", (event) => {
     MAP_POINTERS.inputSelected = 2;
 
-    preGeocodeEvent(event.originalEvent.item.displayName);
+    // console.log(55, event.get("item").value);
+
+    preGeocodeEvent(event.get("item").value);
+    // preGeocodeEvent(event.originalEvent.item.displayName);
   });
 });
