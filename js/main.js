@@ -1,8 +1,9 @@
-const DELIVERY_TARIFF = 75; // Стоимость за километр.
-const MINIMUM_COST = 500; // Минимальная стоимость.
+// // const DELIVERY_TARIFF = 75; // Стоимость за километр.
+// // const MINIMUM_COST = 500; // Минимальная стоимость.
+
 let MY_MAP = null;
-let INPUT_SELECTED = null;
 const MAP_POINTERS = {
+  inputSelected: null,
   pointOne: {
     coords: null,
     fullAddress: null,
@@ -44,7 +45,7 @@ const MAP_POINTERS = {
 // };
 
 function showResult(obj) {
-  // // console.log(INPUT_SELECTED);
+  // // console.log(MAP_POINTERS.inputSelected);
   let mapContainer = document.querySelector("#map");
   let bounds = obj.properties.get("boundedBy");
 
@@ -64,7 +65,7 @@ function showResult(obj) {
   // // Создаём карту.
   // // showOnMap(mapState, shortAddress);
 
-  if (INPUT_SELECTED === 1) {
+  if (MAP_POINTERS.inputSelected === 1) {
     MAP_POINTERS.pointOne.coords = mapState.center;
     MAP_POINTERS.pointOne.fullAddress = [
       obj.getCountry(),
@@ -77,7 +78,7 @@ function showResult(obj) {
     ].join(" ");
   }
 
-  if (INPUT_SELECTED === 2) {
+  if (MAP_POINTERS.inputSelected === 2) {
     MAP_POINTERS.pointTwo.coords = mapState.center;
     MAP_POINTERS.pointTwo.fullAddress = [
       obj.getCountry(),
@@ -98,7 +99,6 @@ const preGeocodeEvent = (value) => {
     function (res) {
       let obj = res.geoObjects.get(0);
       let error;
-      let hint;
 
       if (obj) {
         // Об оценке точности ответа геокодера можно прочитать тут: https://tech.yandex.ru/maps/doc/geocoder/desc/reference/precision-docpage/
@@ -110,27 +110,22 @@ const preGeocodeEvent = (value) => {
           case "number":
           case "near":
           case "range":
-            error = "Неточный адрес, требуется уточнение";
-            hint = "Уточните номер дома";
+            error = "Пожалуйста уточните номер дома";
             break;
           case "street":
-            error = "Неполный адрес, требуется уточнение";
-            hint = "Уточните номер дома";
+            error = "Пожалуйста уточните номер дома";
             break;
           case "other":
           default:
-            error = "Неточный адрес, требуется уточнение";
-            hint = "Уточните адрес";
+            error = "Пожалуйста уточните адрес";
         }
       } else {
-        error = "Адрес не найден";
-        hint = "Уточните адрес";
+        error = "Такой адрес не найден";
       }
 
       // Если геокодер возвращает пустой массив или неточный результат, то показываем ошибку.
       if (error) {
-        console.log(error);
-        console.log(hint);
+        document.querySelector("#down-address").value = error;
       } else {
         showResult(obj);
       }
@@ -152,13 +147,13 @@ ymaps.ready(() => {
   let suggestViewDeliveryAddress = new ymaps.SuggestView("delivery-address");
 
   suggestViewDownAddress.events.add("select", (event) => {
-    INPUT_SELECTED = 1;
+    MAP_POINTERS.inputSelected = 1;
 
     preGeocodeEvent(event.originalEvent.item.displayName);
   });
 
   suggestViewDeliveryAddress.events.add("select", (event) => {
-    INPUT_SELECTED = 2;
+    MAP_POINTERS.pointOne = 2;
 
     preGeocodeEvent(event.originalEvent.item.displayName);
   });
