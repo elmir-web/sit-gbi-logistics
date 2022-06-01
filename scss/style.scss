@@ -72,12 +72,54 @@ body {
       flex-direction: column;
     }
 
+    .block-loading {
+      .loader-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+
+        width: 60px;
+        height: 60px;
+
+        .Loader {
+          width: 100%;
+          height: 100%;
+          border: 10px solid #162534;
+          border-top-color: #4bc8eb;
+          border-block-color: #f13a8f;
+          border-radius: 50%;
+          animation: rotate 5s linear infinite;
+        }
+
+        .Loader-inner {
+          border-top-color: #36f372;
+          border-bottom-color: #fff;
+          animation-duration: 2.5s;
+        }
+
+        @keyframes rotate {
+          0% {
+            transform: scale(1) rotate(360deg);
+          }
+          50% {
+            transform: scale(0.8) rotate(-360deg);
+          }
+          100% {
+            transform: scale(1) rotate(360deg);
+          }
+        }
+      }
+    }
+
     .couting-price {
       background-color: #161515;
       width: 31.93033381712627%;
       min-height: 800px;
       align-self: flex-end;
       z-index: 1;
+      position: relative;
 
       @media (max-width: 1400px) {
         width: 320px;
@@ -86,6 +128,15 @@ body {
       @media (max-width: 768px) {
         width: 100%;
         min-height: 512px;
+      }
+
+      &__loading {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(22, 21, 21, 0.75);
+        z-index: 1;
       }
 
       h2 {
@@ -278,7 +329,13 @@ body {
           }
         }
 
+        &__toprowleft {
+          display: none;
+        }
+
         &__toprowright {
+          display: none;
+
           @media (max-width: 1400px) {
             margin-top: 20px;
           }
@@ -403,6 +460,15 @@ body {
         width: 100%;
         min-height: 320px;
         bottom: 0;
+      }
+
+      &__loading {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(22, 21, 21, 0.75);
+        z-index: 1;
       }
     }
   }

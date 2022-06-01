@@ -1,6 +1,5 @@
-// // const DELIVERY_TARIFF = 75; // Стоимость за километр.
-// // const MINIMUM_COST = 500; // Минимальная стоимость.
-
+const MINIMUM_COST = 500; // Минимальная стоимость.
+const DELIVERY_TARIFF = 75; // Стоимость за километр.
 let MY_MAP = null;
 const MAP_POINTERS = {
   error: null,
@@ -17,7 +16,91 @@ const MAP_POINTERS = {
   },
 };
 
-(() => {})();
+const showResultMapAndInfo = (multiRoute) => {
+  MY_MAP.geoObjects.add(multiRoute);
+
+  multiRoute.model.events
+    .add("requestsuccess", (event) => {
+      const routes = event.get("target").getRoutes();
+      const distance = Math.ceil(routes[0].properties.get("distance").value);
+
+      const kilometrs = Math.ceil(distance / 1000);
+
+      document.querySelector(
+        ".delivery-results__distance-value"
+      ).innerHTML = `${kilometrs} км`;
+
+      document.querySelector(".delivery-results__price-value").innerHTML = `≈ ${
+        kilometrs * DELIVERY_TARIFF
+      } ₽`;
+
+      document.querySelector(".delivery-results__toprowleft").style.display =
+        "block";
+
+      document.querySelector(".delivery-results__toprowright").style.display =
+        "block";
+
+      document.querySelector(".couting-price__loading").style.display = "none";
+      document.querySelector(".couting-map__loading").style.display = "none";
+    })
+    .add("requestfail", (event) => {
+      console.log(`Error: ${event.get("error").message}`);
+    });
+};
+
+const createMapBlock = () => {
+  return new ymaps.Map("map", {
+    center: [45.060491, 38.97304],
+    zoom: 9,
+    controls: [],
+  });
+};
+
+const createRouter = () => {
+  let multiRouteModel = new ymaps.multiRouter.MultiRouteModel(
+    [
+      [MAP_POINTERS.pointOne.coords[0], MAP_POINTERS.pointOne.coords[1]],
+      [MAP_POINTERS.pointTwo.coords[0], MAP_POINTERS.pointTwo.coords[1]],
+    ],
+    {
+      // Путевые точки можно перетаскивать.
+      // Маршрут при этом будет перестраиваться.
+      wayPointDraggable: true,
+      boundsAutoApply: true,
+    }
+  );
+
+  ymaps.modules.require(
+    ["MultiRouteCustomView"],
+    function (MultiRouteCustomView) {
+      // Создаем экземпляр текстового отображения модели мультимаршрута.
+      // см. файл custom_view.js
+      new MultiRouteCustomView(multiRouteModel);
+    }
+  );
+
+  MY_MAP.destroy();
+  MY_MAP = MY_MAP = createMapBlock();
+
+  // Создаем на основе существующей модели мультимаршрут.
+  let multiRoute = new ymaps.multiRouter.MultiRoute(multiRouteModel, {
+    // Путевые точки можно перетаскивать.
+    // Маршрут при этом будет перестраиваться.
+    wayPointDraggable: true,
+    boundsAutoApply: true,
+  });
+
+  MAP_POINTERS.error = null;
+  MAP_POINTERS.inputSelected = null;
+  MAP_POINTERS.pointOne.coords = null;
+  MAP_POINTERS.pointOne.fullAddress = null;
+  MAP_POINTERS.pointOne.shortAddress = null;
+  MAP_POINTERS.pointTwo.coords = null;
+  MAP_POINTERS.pointTwo.fullAddress = null;
+  MAP_POINTERS.pointTwo.shortAddress = null;
+
+  showResultMapAndInfo(multiRoute);
+};
 
 // const showOnMap = (state, caption) => {
 //   // Если карта еще не была создана, то создадим ее и добавим метку с адресом.
@@ -45,8 +128,7 @@ const MAP_POINTERS = {
 //   }
 // };
 
-function showResult(obj) {
-  // // console.log(MAP_POINTERS.inputSelected);
+const createAddress = (obj) => {
   let mapContainer = document.querySelector("#map");
   let bounds = obj.properties.get("boundedBy");
 
@@ -55,16 +137,6 @@ function showResult(obj) {
     mapContainer.offsetWidth,
     mapContainer.offsetHeight,
   ]);
-
-  // // console.log(mapState.center); // координаты точки
-
-  // // Убираем контролы с карты.
-  // // mapState.controls = [];
-
-  // // console.log(mapState); // координаты точки
-
-  // // Создаём карту.
-  // // showOnMap(mapState, shortAddress);
 
   if (MAP_POINTERS.inputSelected === 1) {
     MAP_POINTERS.pointOne.coords = mapState.center;
@@ -92,10 +164,15 @@ function showResult(obj) {
     ].join(" ");
   }
 
-  console.log(MAP_POINTERS);
-}
+  createRouter();
+};
 
-const preGeocodeEvent = (value) => {
+const preGeocodeEvent = (value, prevInputSelect) => {
+  if (prevInputSelect != null && MAP_POINTERS.inputSelected != null) {
+    document.querySelector(".couting-price__loading").style.display = "block";
+    document.querySelector(".couting-map__loading").style.display = "block";
+  }
+
   ymaps.geocode(value).then(
     function (res) {
       let obj = res.geoObjects.get(0);
@@ -133,40 +210,36 @@ const preGeocodeEvent = (value) => {
         else if (MAP_POINTERS.inputSelected === 2)
           document.querySelector("#delivery-address").value = error;
       } else {
-        showResult(obj);
+        createAddress(obj);
       }
     },
     function (e) {
-      //     console.log(e);
+      console.log(e);
     }
   );
 };
 
+// __________________________________________________ Все начинается здесь
 ymaps.ready(() => {
-  MY_MAP = new ymaps.Map("map", {
-    center: [45.060491, 38.97304],
-    zoom: 9,
-    controls: [],
-  });
+  // Создаем экземпляр карты и пофигу что потом мы его удалим, просто он сейчас нужен
+  MY_MAP = createMapBlock();
 
+  // Создаем подсказку ввода адреса на каждом из полей средствами Яндекс.Карты
   let suggestViewDownAddress = new ymaps.SuggestView("down-address");
   let suggestViewDeliveryAddress = new ymaps.SuggestView("delivery-address");
 
+  // Если выбран пункт из подсказки
   suggestViewDownAddress.events.add("select", (event) => {
-    MAP_POINTERS.inputSelected = 1;
+    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected); // Передаем на функцию адрес из первого поля
 
-    // console.log(55, event.get("item").value);
-
-    preGeocodeEvent(event.get("item").value);
-    // preGeocodeEvent(event.originalEvent.item.displayName);
+    MAP_POINTERS.inputSelected = 1; // Установим служебное значение в результат выбранного первого поля
   });
 
+  // Если выбран пункт из подсказки
   suggestViewDeliveryAddress.events.add("select", (event) => {
-    MAP_POINTERS.inputSelected = 2;
+    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected); // Передаем на функцию адрес из первого поля
 
-    // console.log(55, event.get("item").value);
-
-    preGeocodeEvent(event.get("item").value);
-    // preGeocodeEvent(event.originalEvent.item.displayName);
+    MAP_POINTERS.inputSelected = 2; // Установим служебное значение в результат выбранного второго поля
   });
 });
+// __________________________________________________ Все начинается здесь
