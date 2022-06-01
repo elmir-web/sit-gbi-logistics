@@ -96,42 +96,9 @@ const createRouter = () => {
   });
 
   MAP_POINTERS.error = null;
-  MAP_POINTERS.inputSelected = null;
-  MAP_POINTERS.pointOne.coords = null;
-  MAP_POINTERS.pointOne.fullAddress = null;
-  MAP_POINTERS.pointOne.shortAddress = null;
-  MAP_POINTERS.pointTwo.coords = null;
-  MAP_POINTERS.pointTwo.fullAddress = null;
-  MAP_POINTERS.pointTwo.shortAddress = null;
 
   showResultMapAndInfo(multiRoute);
 };
-
-// const showOnMap = (state, caption) => {
-//   // Если карта еще не была создана, то создадим ее и добавим метку с адресом.
-//   if (!MY_MAP) {
-//     MY_MAP = new ymaps.Map("map", state);
-//     placemark = new ymaps.Placemark(
-//       MY_MAP.getCenter(),
-//       {
-//         iconCaption: caption,
-//         balloonContent: caption,
-//       },
-//       {
-//         preset: "islands#redDotIconWithCaption",
-//       }
-//     );
-//     MY_MAP.geoObjects.add(placemark);
-//     // Если карта есть, то выставляем новый центр карты и меняем данные и позицию метки в соответствии с найденным адресом.
-//   } else {
-//     MY_MAP.setCenter(state.center, state.zoom);
-//     placemark.geometry.setCoordinates(state.center);
-//     placemark.properties.set({
-//       iconCaption: caption,
-//       balloonContent: caption,
-//     });
-//   }
-// };
 
 const createAddress = (obj) => {
   let mapContainer = document.querySelector("#map");
