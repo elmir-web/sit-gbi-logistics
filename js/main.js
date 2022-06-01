@@ -139,8 +139,14 @@ const createAddress = (obj) => {
   createRouter();
 };
 
-const preGeocodeEvent = (value, prevInputSelect) => {
-  if (prevInputSelect != null && MAP_POINTERS.inputSelected != null) {
+const preGeocodeEvent = (value, prevInputSelect, currentInput) => {
+  MAP_POINTERS.inputSelected = currentInput; // Установим служебное значение в результат выбранного второго поля
+
+  if (
+    prevInputSelect != null &&
+    MAP_POINTERS.inputSelected != null &&
+    MAP_POINTERS.inputSelected != prevInputSelect
+  ) {
     document.querySelector(".couting-price__loading").style.display = "block";
     document.querySelector(".couting-map__loading").style.display = "block";
   }
@@ -150,26 +156,7 @@ const preGeocodeEvent = (value, prevInputSelect) => {
       let obj = res.geoObjects.get(0);
       let error;
 
-      if (obj) {
-        // Об оценке точности ответа геокодера можно прочитать тут: https://tech.yandex.ru/maps/doc/geocoder/desc/reference/precision-docpage/
-        switch (
-          obj.properties.get("metaDataProperty.GeocoderMetaData.precision")
-        ) {
-          case "exact":
-            break;
-          case "number":
-          case "near":
-          case "range":
-            error = "Пожалуйста уточните номер дома";
-            break;
-          case "street":
-            error = "Пожалуйста уточните номер дома";
-            break;
-          case "other":
-          default:
-            error = "Пожалуйста уточните адрес";
-        }
-      } else {
+      if (!obj) {
         error = "Такой адрес не найден";
       }
 
@@ -202,16 +189,12 @@ ymaps.ready(() => {
 
   // Если выбран пункт из подсказки
   suggestViewDownAddress.events.add("select", (event) => {
-    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected); // Передаем на функцию адрес из первого поля
-
-    MAP_POINTERS.inputSelected = 1; // Установим служебное значение в результат выбранного первого поля
+    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected, 1); // Передаем на функцию адрес из первого поля
   });
 
   // Если выбран пункт из подсказки
   suggestViewDeliveryAddress.events.add("select", (event) => {
-    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected); // Передаем на функцию адрес из первого поля
-
-    MAP_POINTERS.inputSelected = 2; // Установим служебное значение в результат выбранного второго поля
+    preGeocodeEvent(event.get("item").value, MAP_POINTERS.inputSelected, 2); // Передаем на функцию адрес из первого поля
   });
 });
 // __________________________________________________ Все начинается здесь
