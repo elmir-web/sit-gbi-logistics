@@ -30,9 +30,14 @@ const showResultMapAndInfo = (multiRoute) => {
         ".delivery-results__distance-value"
       ).innerHTML = `${kilometrs} км`;
 
-      document.querySelector(".delivery-results__price-value").innerHTML = `≈ ${
-        kilometrs * DELIVERY_TARIFF
-      } ₽`;
+      const priceDelivery =
+        kilometrs * DELIVERY_TARIFF < MINIMUM_COST
+          ? MINIMUM_COST
+          : kilometrs * DELIVERY_TARIFF;
+
+      document.querySelector(
+        ".delivery-results__price-value"
+      ).innerHTML = `≈ ${priceDelivery} ₽`;
 
       document.querySelector(".delivery-results__toprowleft").style.display =
         "block";
